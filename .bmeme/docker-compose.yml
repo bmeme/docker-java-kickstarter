@@ -1,0 +1,11 @@
+version: "3.4"
+services:
+  app:
+    image: bmeme/java-dev:3.8.3-jdk-11-openj9
+    entrypoint: /bin/sleep infinity
+    working_dir: /usr/src/app/
+    volumes:
+      - "../:/usr/src/app:cached"
+    environment:
+      - MAVEN_CONFIG=/usr/src/app/.cache/.m2
+      - DNSDOCK_ALIAS=${PROJECT_NAME}.${PROJECT_VENDOR}.docker
