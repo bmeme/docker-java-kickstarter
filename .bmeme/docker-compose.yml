@@ -1,11 +1,16 @@
 version: "3.4"
 services:
   app:
-    image: bmeme/java-dev:3.8.3-jdk-11-openj9
+    build:
+      context: config/docker
+      dockerfile: dockerfiles/Dockerfile.app
     entrypoint: /bin/sleep infinity
     working_dir: /usr/src/app/
     volumes:
       - "../:/usr/src/app:cached"
     environment:
+      - TERM=xterm-256color
       - MAVEN_CONFIG=/usr/src/app/.cache/.m2
-      - DNSDOCK_ALIAS=${PROJECT_NAME}.${PROJECT_VENDOR}.docker
+      - DNSDOCK_ALIAS=app.${PROJECT_NAME}.${PROJECT_VENDOR}.docker
+      - VIRTUAL_PORT=8090
+      - VIRTUAL_HOST=app.${PROJECT_NAME}.${PROJECT_VENDOR}.docker

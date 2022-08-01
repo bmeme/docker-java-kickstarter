@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+set -e
+source .bmeme/build/common/lib.sh
+
+mkdir -p "${BASE_PRJ_DIR}/.bmeme/log"
+
+if ! test -f ".env"; then
+    echo "Please specify the vendor for your new project."
+    echo "Typically this is your organization name, or the organization the projects belongs to."
+    echo -n -e "${CY}Vendor:${CN} "
+    read VENDOR
+
+    echo ""
+    echo "Please specify the name for your new project."
+    echo -n -e "${CY}Project name:${CN} "
+    read PROJECT
+
+    echo ""
+    echo -e "Configuring ${CG}env${CN} file..."
+    sed "s/@@@PROJECT@@@/${PROJECT}/g;s/@@@VENDOR@@@/${VENDOR}/g" .env.dist >.env
+
+    echo -e "Removing ${CG}.env.dist${CN} file..."
+    rm -f .env.dist
+
+    source .env
+fi
+
+if ! test -f ".env"; then
+    exit 1
+fi
+
+command_env() {
+    if [[ ":$PATH:" != *":$LOCAL_PATH:"* ]]; then
+        echo -n "export PATH=\"${LOCAL_PATH}:\${PATH}\""
+    fi
+}
+
+command_help() {
+
+    echo ""
+    echo "=============================================================================================="
+    echo -e " ${CB}${TB}${COMPOSE_PROJECT_NAME}${CN} - ${CB}Help${CN} "
+    echo "=============================================================================================="
+    echo ""
+    echo -en "${CY}"
+    printf "%-25s" "${0} help"
+    echo -e "${CN} -- Show help on how to use this script"
+    for i in $(ls .bmeme/build/commands); do
+        CMD_DESCR=$(.bmeme/build/commands/$i descr)
+        echo -en "${CY}"
+        printf "%-25s" "${0} ${i%.*}"
+        echo -e "${CN} -- ${CMD_DESCR}"
+    done
+    echo -en "${CY}"
+    printf "%-25s" "eval \$(${0} env)"
+    echo -e "${CN} -- Set your \$PATH in order to use c script wrapper"
+    echo ""
+
+    if [[ ":$PATH:" == *":$LOCAL_PATH:"* ]]; then
+        echo ""
+        echo -e "Your ${CG}\$PATH${CN} is correctly set"
+    fi
+
+    echo ""
+    echo -e "DNS alias: ${CB}app.${PROJECT_NAME}.${PROJECT_VENDOR}.docker${CN}"
+    echo ""
+}
+
+log_begin
+
+if [ $# -eq 0 ]; then
+    command_help
+    exit 0
+fi
+
+for cmdLineArg in "$@"; do
+
+    if [[ "$cmdLineArg" == "help" ]]; then
+        command_help
+    elif [[ "$cmdLineArg" == "env" ]]; then
+        command_env
+    elif [[ -f ".bmeme/build/commands/${cmdLineArg}.sh" ]]; then
+        bash -c ".bmeme/build/commands/${cmdLineArg}.sh run"
+    else
+        echo -e "Unrecognized command: ${CR}${cmdLineArg}${CN}"
+        echo
+        echo -e "Try: ${CY}${0} help${CN}"
+        exit 1
+    fi
+
+done
+
+log_end
+exit 0
