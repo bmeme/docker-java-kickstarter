@@ -1,0 +1,4 @@
+# configure script log file
+/.bmeme/log
+# maven settings and cache
+/.m2/
