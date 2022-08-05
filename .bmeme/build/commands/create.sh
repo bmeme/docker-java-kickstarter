@@ -19,15 +19,6 @@ if [[ "$1" == "run" ]]; then
   docker-compose build --build-arg FIX_UID=$(id -u) --build-arg FIX_GID=$(id -g) 2>&1 >> ${LOGFILE}
   echo "${LOGPREFIX} CMD docker-compose up -d" >> ${LOGFILE}
   docker-compose up -d 2>&1 >> ${LOGFILE}
-
   echo ""
-  if [[ ":$PATH:" == *":$LOCAL_PATH:"* ]]; then
-    echo -e "Your ${CG}\$PATH${CN} is correctly set"
-  else
-    echo -e "Your ${CG}\$PATH${CN} is not configured."
-    echo ""
-    echo -e "Run: ${CY}eval \$(${0} env)${CN}"
-    echo ""
-  fi
 
 fi

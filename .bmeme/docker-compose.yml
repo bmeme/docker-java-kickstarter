@@ -11,5 +11,5 @@ services:
     environment:
       - TERM=xterm-256color
       - DNSDOCK_ALIAS=app.${PROJECT_NAME}.${PROJECT_VENDOR}.docker
-      - VIRTUAL_PORT=8090
+      - VIRTUAL_PORT=8080
       - VIRTUAL_HOST=app.${PROJECT_NAME}.${PROJECT_VENDOR}.docker
