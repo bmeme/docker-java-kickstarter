@@ -40,6 +40,15 @@ You can run a shell directly inside the container:
 ```bash
 memento docker cmd bash
 ```
+## Contributing
+
+Any feedback, bug report or idea is extremely welcome.
+
+Reach us through our [website](https://www.bmeme.com) or send us an email at [info@bonsaimeme.com](mailto:info@bonsaimeme.com).
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
 
 ## References
 
