@@ -17,9 +17,10 @@ if test -f "${BASE_PRJ_DIR}/.env"; then
 fi
 APP_DIR="${BASE_PRJ_DIR}/app"
 
-LOCAL_PATH="${BASE_PRJ_DIR}/.bmeme/bin"
-C_BIN="${BASE_PRJ_DIR}/.bmeme/bin/c"
-LOGDIR="${BASE_PRJ_DIR}/.bmeme/log"
+LOCAL_PATH="${BASE_PRJ_DIR}/.bmeme/build/bin"
+C_BIN="${LOCAL_PATH}/c"
+APP_BIN="${LOCAL_PATH}/app"
+LOGDIR="${BASE_PRJ_DIR}/.bmeme/build/log"
 DATE=$(date +%Y-%m-%d_%H-%M-%S)
 LOGFILE="${LOGDIR}/configure.log"
 LOGPREFIX=">>>> "

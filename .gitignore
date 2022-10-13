@@ -1,4 +1,5 @@
-# configure script log file
-/.bmeme/log
-# maven settings and cache
-/.m2/
+/.bmeme/build/log
+/.cache/
+/target/
+/.vscode/
+/.idea/

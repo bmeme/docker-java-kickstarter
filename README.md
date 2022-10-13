@@ -4,7 +4,6 @@ Example project to develop application with [Java](https://www.java.com/) using 
 
 The idea is that you can use docker to develop your java application, without having to install anything on your system.
 
-If you prefix your commands with `memento docker cmd` you can run anything in the container like you use to do if you have maven and java installed on your system.
 
 ## TL;DR
 

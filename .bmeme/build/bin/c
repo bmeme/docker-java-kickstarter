@@ -23,5 +23,5 @@ done
 CMD="${QUOTEDCMD[*]}"
 
 pushd ${FOUND} > /dev/null
-.bmeme/bin/app cd ".${REL_DIR}" \; ${CMD}
+.bmeme/build/bin/app cd ".${REL_DIR}" \; ${CMD}
 popd > /dev/null
