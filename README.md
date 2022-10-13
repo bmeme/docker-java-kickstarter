@@ -1,5 +1,7 @@
 # Java development docker project
 
+[![Maintained? Yes](https://img.shields.io/badge/Maintained%3F-Yes-success)](https://github.com/bmeme/java-dev) ![GitHub last commit](https://img.shields.io/github/last-commit/bmeme/java-dev) [![GitHub issues](https://img.shields.io/github/issues/bmeme/java-dev)](https://github.com/bmeme/java-dev/issues) ![GitHub top language](https://img.shields.io/github/languages/top/bmeme/java-dev) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/bmeme/java-dev)
+
 Example project to develop application with [Java](https://www.java.com/) using [Docker](https://www.docker.com/).
 
 The idea is that you can use docker to develop your java application, without having to install anything on your system.
