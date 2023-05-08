@@ -7,9 +7,18 @@ Example project to develop application with [Java](https://www.java.com/) using 
 The idea is that you can use docker to develop your java application, without having to install anything on your system.
 
 
-## TL;DR
+## Usage
 
-Install [Memento](https://github.com/bmeme/memento) and the [Memento Docker plugin](https://github.com/bmeme/memento-docker).
+To let anything works, you need to have `docker` and `docker-compose` installed and configured on your system.
+
+Also, you need [Memento](https://github.com/bmeme/memento), [Memento Kickstarter](https://github.com/bmeme/memento-kickstarter) and [Memento Docker Plugin](https://github.com/bmeme/memento-docker).
+
+Start by creating a new project using this kickstarter: 
+
+```
+memento kickstarter create python
+```
+
 Then run:
 ```bash
 memento docker configure
@@ -20,10 +29,8 @@ Once this quick configuration is done, the help is shown.
 
 To create the docker environment needed to work with your project, run:
 ```bash
-memento docker configure create
+memento docker configure docker:create
 ```
-
-All done!
 
 Check that everything is working well by running some test commands:
 
@@ -33,6 +40,11 @@ memento docker cmd mvn --version
 
 ```bash
 memento docker cmd java -version
+```
+
+You can create a new Java application with:
+```bash
+memento docker configure java:generate
 ```
 
 ## Access the container

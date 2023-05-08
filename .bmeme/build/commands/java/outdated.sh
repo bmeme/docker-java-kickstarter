@@ -14,4 +14,6 @@ if [[ "$1" == "run" ]]; then
   echo -e "============ ${CB}Showing${CN} outdated dependencies ..."
   echo "${LOGPREFIX} CMD ${C_BIN} mvn versions:display-dependency-updates" >> ${LOGFILE}
   ${C_BIN} mvn versions:display-dependency-updates
+  echo "${LOGPREFIX} CMD ${C_BIN} mvn versions:display-plugin-updates" >> ${LOGFILE}
+  ${C_BIN} mvn versions:display-plugin-updates
 fi

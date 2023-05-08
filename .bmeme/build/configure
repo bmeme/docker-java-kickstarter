@@ -39,13 +39,77 @@ if ! test -f "${BASE_PRJ_DIR}/.env"; then
     exit 1
 fi
 
-command_help() {
+# Rif: https://stackoverflow.com/a/37939589
+function version { 
+    echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; 
+}
+
+function command_version() {
+
+    ACTUAL_VERSION=$(cat "${BASE_PRJ_DIR}/.bmeme/build/version")
+    echo -e "Installed version: ${CY}${ACTUAL_VERSION}${CN}"
+}
+
+function command_update() {
+
+    TMPDIR="/tmp/bmeme-build-management"
+    rm -rf "${TMPDIR}"
+    mkdir "${TMPDIR}"
+    git clone git@gitlab.bmemelab.cloud:bmeme/development-kickstarters/bmeme-build-management.git "${TMPDIR}"
+    REMOTE_VERSION=$(cat "${TMPDIR}/version")
+    ACTUAL_VERSION=$(cat "${BASE_PRJ_DIR}/.bmeme/build/version")
+    echo -e "Installed version: ${CY}${ACTUAL_VERSION}${CN}"
+    if [ $(version "${REMOTE_VERSION}") -gt $(version "${ACTUAL_VERSION}") ]; then
+        echo -e "A ${CR}new version${CN} is available: ${CY}${REMOTE_VERSION}${CN}"
+    else
+        echo -e "Your version is ${CG}up to date${CN}"
+    fi
+    rm -rf "${TMPDIR}"
+}
+
+function command_upgrade() {
+
+    TMPDIR="/tmp/bmeme-build-management"
+    rm -rf "${TMPDIR}"
+    mkdir "${TMPDIR}"
+    git clone git@gitlab.bmemelab.cloud:bmeme/development-kickstarters/bmeme-build-management.git "${TMPDIR}"
+    REMOTE_VERSION=$(cat "${TMPDIR}/version")
+    ACTUAL_VERSION=$(cat "${BASE_PRJ_DIR}/.bmeme/build/version")
+    echo -e "Installed version: ${CY}${ACTUAL_VERSION}${CN}"
+    if [ $(version "${REMOTE_VERSION}") -gt $(version "${ACTUAL_VERSION}") ]; then
+        echo -e "Installing ${CR}new version${CN}: ${CY}${REMOTE_VERSION}${CN}"
+        cp "${TMPDIR}/src/build/bin/app" "${BASE_PRJ_DIR}/.bmeme/build/bin/app"
+        cp "${TMPDIR}/src/build/bin/c" "${BASE_PRJ_DIR}/.bmeme/build/bin/c"
+        cp "${TMPDIR}/src/build/configure" "${BASE_PRJ_DIR}/.bmeme/build/configure"
+        cp "${TMPDIR}/version" "${BASE_PRJ_DIR}/.bmeme/build/version"
+    else
+        echo -e "Your version is ${CG}up to date${CN}"
+    fi
+    rm -rf "${TMPDIR}"
+}
+
+function command_env() {
+    if [[ ":$PATH:" != *":$LOCAL_PATH:"* ]]; then
+        echo -n "export PATH=\"${LOCAL_PATH}:\${PATH}\""
+    fi
+}
+
+function command_help() {
 
     echo ""
     echo "=============================================================================================="
     echo -e " ${CB}${TB}${COMPOSE_PROJECT_NAME}${CN} - ${CB}Help${CN} "
     echo "=============================================================================================="
     echo ""
+    echo -en "${CY}"
+    printf "%-25s" " version"
+    echo -e "${CN} -- Show script version"
+    echo -en "${CY}"
+    printf "%-25s" " update"
+    echo -e "${CN} -- Check for available upgrades"
+    echo -en "${CY}"
+    printf "%-25s" " upgrade"
+    echo -e "${CN} -- Upgrade script to last available version"
     echo -en "${CY}"
     printf "%-25s" " help"
     echo -e "${CN} -- Show help on how to use this script"
@@ -67,13 +131,26 @@ command_help() {
     echo -en "${CY}"
 
     echo ""
+    if [[ ":$PATH:" == *":$LOCAL_PATH:"* ]]; then
+        echo -e "Your ${CG}\$PATH${CN} is correctly set."
+    else
+        echo -e "Your ${CG}\$PATH${CN} is not configured."
+        echo -e "Run: ${CY}eval \$(${0} env)${CN}"
+    fi
+    echo ""
+
+    echo ""
     echo ""
     echo -e "${CR}${TB}DNS aliases${CN}"
     echo ""
     echo -e "These aliases work if you have ${CY}dinghy-http-proxy${CN} on MacOs or ${CY}dnsdock${CN} on Linux configured."
     echo ""
-    echo -e " - ${CG}http://app.${PROJECT_NAME}.${PROJECT_VENDOR}.docker${CN} (MacOs)"
-    echo -e " - ${CG}http://app.${PROJECT_NAME}.${PROJECT_VENDOR}.docker:${PROJECT_PORT}${CN} (Linux)"
+    if [[ "${PROJECT_PORT}" == "80" ]]; then
+        echo -e " - ${CG}http://app.${PROJECT_NAME}.${PROJECT_VENDOR}.docker${CN}"
+    else
+        echo -e " - ${CG}http://app.${PROJECT_NAME}.${PROJECT_VENDOR}.docker${CN} (MacOs)"
+        echo -e " - ${CG}http://app.${PROJECT_NAME}.${PROJECT_VENDOR}.docker:${PROJECT_PORT}${CN} (Linux)"
+    fi
     echo ""
     echo ""
     echo -e "${CR}${TB}Script log file${CN}"
@@ -93,6 +170,14 @@ for cmdLineArg in "$@"; do
 
     if [[ "$cmdLineArg" == "help" ]]; then
         command_help
+    elif [[ "$cmdLineArg" == "version" ]]; then
+        command_version
+    elif [[ "$cmdLineArg" == "update" ]]; then
+        command_update
+    elif [[ "$cmdLineArg" == "upgrade" ]]; then
+        command_upgrade
+    elif [[ "$cmdLineArg" == "env" ]]; then
+        command_env
     elif [[ "$cmdLineArg" =~ .*":".* ]] && [[ -f "${BASE_PRJ_DIR}/.bmeme/build/commands/${cmdLineArg%:*}/${cmdLineArg#*:}.sh" ]]; then
         bash -c "${BASE_PRJ_DIR}/.bmeme/build/commands/${cmdLineArg%:*}/${cmdLineArg#*:}.sh run"
     elif [[ -f "${BASE_PRJ_DIR}/.bmeme/build/commands/${cmdLineArg}.sh" ]]; then

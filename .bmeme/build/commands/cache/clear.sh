@@ -6,12 +6,14 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 source "${SCRIPT_DIR}/../../common/lib.sh"
 
 if [[ "$1" == "descr" ]]; then
-  echo -n "Run App"
+  echo -n "Clear cache"
   exit 0
 fi
 
 if [[ "$1" == "run" ]]; then
-  echo -e "============ ${CB}Running${CN} application ..."
-  echo "${LOGPREFIX} CMD ${C_BIN} mvn exec:java" >> ${LOGFILE}
-  ${C_BIN} mvn exec:java
+  echo ""
+  echo -e "Clearing ${CG}cache data${CN} ..."
+  echo ""
+  echo "${LOGPREFIX} CMD rm -rf ${BASE_PRJ_DIR}/cache/.m2/repository" >> ${LOGFILE}
+  rm -rf ${BASE_PRJ_DIR}/cache/.m2/repository
 fi
